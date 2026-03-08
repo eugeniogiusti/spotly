@@ -16,7 +16,7 @@ Spotly is a map app for slow travelers. Instead of showing you the usual generic
 - **POI card** with details, opening hours, website, phone, and directions
 - **Save places** with personal notes
 - **Community tags** on POIs: users can add collaborative tags (`laptop_friendly`, `wifi`, `power_outlets`, `quiet`, `budget_friendly`, `tourist_trap`)
-- **My Places**: paginated and filterable list of saved places with infinite scroll
+- **My Places**: paginated and filterable list of saved places
 - **Dashboard** with personal stats: saved places, cities explored, favorite layer
 
 ---
