@@ -140,7 +140,7 @@ function loadMapPosition(): [number, number, number] {
     if (!isNaN(lat) && !isNaN(lng) && !isNaN(zoom)) {
         return [lat, lng, zoom];
     }
-    return [41.9028, 12.4964, 13]; // fallback: Rome
+    return [54.5, 15.0, 4]; // fallback: Europe overview
 }
 
 function onKeyDown(e: KeyboardEvent): void {
