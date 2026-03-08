@@ -9,7 +9,7 @@ class OverpassService
 {
     private const OVERPASS_URL = 'https://overpass-api.de/api/interpreter';
 
-    private const TIMEOUT_SECONDS = 30;
+    private const TIMEOUT_SECONDS = 10;
 
     /**
      * Fetch POIs from Overpass API for a given bounding box and layer.
@@ -66,7 +66,7 @@ class OverpassService
 
         $body = implode("\n", $lines);
 
-        return "[out:json][timeout:25];\n(\n{$body}\n);\nout center;";
+        return "[out:json][timeout:8];\n(\n{$body}\n);\nout center;";
     }
 
     /**

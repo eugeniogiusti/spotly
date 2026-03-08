@@ -85,4 +85,26 @@ php artisan serve
 
 ---
 
+## Performance Notes
+
+### First-time layer loading
+The first time you activate a layer in a new area, Spotly fetches data live from the **Overpass API** (OpenStreetMap). This request can take up to ~10 seconds depending on Overpass server load. Subsequent requests for the same area are served from the local DB cache (24h TTL) and are near-instant.
+
+### Recommended production setup
+For the best performance in production, use **PostgreSQL + Redis**:
+
+- **PostgreSQL** handles large POI datasets more efficiently than SQLite, with proper indexing on bbox queries (`lat`, `lng`, `layer`).
+- **Redis** as the Laravel cache driver avoids repeated DB lookups for session, config, and route caching.
+
+Set in `.env`:
+```env
+DB_CONNECTION=pgsql
+CACHE_STORE=redis
+SESSION_DRIVER=redis
+REDIS_HOST=127.0.0.1
+REDIS_PORT=6379
+```
+
+---
+
 > **Note:** this project is under active development. There may be bugs or incomplete features.

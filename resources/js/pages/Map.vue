@@ -319,13 +319,7 @@ async function toggleLayer(layerKey: string) {
         activeLayers.value = [...activeLayers.value, layerKey];
         loadingLayer.value = layerKey;
         try {
-            try {
-                await loadLayer(layerKey);
-            } catch {
-                // First attempt failed — Overpass may be temporarily busy, retry once after 2s
-                await new Promise((resolve) => setTimeout(resolve, 2000));
-                await loadLayer(layerKey);
-            }
+            await loadLayer(layerKey);
         } catch {
             // Both attempts failed — deactivate layer and show brief error
             activeLayers.value = activeLayers.value.filter((k) => k !== layerKey);
