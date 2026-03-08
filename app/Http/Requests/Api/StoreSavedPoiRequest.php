@@ -20,11 +20,11 @@ class StoreSavedPoiRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'poi_external_id' => ['required', 'string'],
-            'layer' => ['required', 'string'],
-            'name' => ['required', 'string'],
-            'lat' => ['required', 'numeric'],
-            'lng' => ['required', 'numeric'],
+            'poi_external_id' => ['required', 'string', 'max:255'],
+            'layer' => ['required', 'string', 'max:64'],
+            'name' => ['required', 'string', 'max:255'],
+            'lat' => ['required', 'numeric', 'between:-90,90'],
+            'lng' => ['required', 'numeric', 'between:-180,180'],
         ];
     }
 }

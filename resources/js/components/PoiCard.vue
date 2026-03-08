@@ -183,7 +183,7 @@ async function toggleSave() {
                 body: JSON.stringify({
                     poi_external_id: props.poi.external_id,
                     layer: props.poi.layer,
-                    name: props.poi.name || '',
+                    name: props.poi.name,
                     lat: props.poi.lat,
                     lng: props.poi.lng,
                 }),
