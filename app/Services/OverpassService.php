@@ -24,10 +24,14 @@ class OverpassService
 
         $query = $this->buildQuery($bbox, $tags);
 
-        $response = Http::timeout(self::TIMEOUT_SECONDS)
-            ->withHeaders(['Content-Type' => 'application/x-www-form-urlencoded'])
-            ->asForm()
-            ->post(self::OVERPASS_URL, ['data' => $query]);
+        try {
+            $response = Http::timeout(self::TIMEOUT_SECONDS)
+                ->withHeaders(['Content-Type' => 'application/x-www-form-urlencoded'])
+                ->asForm()
+                ->post(self::OVERPASS_URL, ['data' => $query]);
+        } catch (\Exception $e) {
+            throw new RuntimeException("Overpass API unreachable: {$e->getMessage()}", 0, $e);
+        }
 
         if ($response->failed()) {
             throw new RuntimeException("Overpass API error: HTTP {$response->status()}");

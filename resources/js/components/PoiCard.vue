@@ -58,6 +58,14 @@ const tagCounts = ref<TagCounts>({});
 const userTags = ref<string[]>([]);
 const tagsLoading = ref(false);
 const togglingTag = ref<string | null>(null);
+const errorMsg = ref<string | null>(null);
+let errorTimer: ReturnType<typeof setTimeout> | null = null;
+
+function showError(msg: string): void {
+    if (errorTimer) clearTimeout(errorTimer);
+    errorMsg.value = msg;
+    errorTimer = setTimeout(() => { errorMsg.value = null; }, 3500);
+}
 
 watch(
     () => props.poi,
@@ -67,6 +75,7 @@ watch(
             : false;
         tagCounts.value = {};
         userTags.value = [];
+        errorMsg.value = null;
         if (poi) {
             fetchTags(poi.external_id);
         }
@@ -86,7 +95,7 @@ async function fetchTags(externalId: string): Promise<void> {
             userTags.value = data.user_tags ?? [];
         }
     } catch {
-        // silently ignore network/parse errors (e.g. session expiry)
+        // network error — tags shown without counts, non-critical
     } finally {
         tagsLoading.value = false;
     }
@@ -120,9 +129,13 @@ async function toggleTag(tag: string): Promise<void> {
             } else {
                 userTags.value = userTags.value.filter((t) => t !== data.tag);
             }
+        } else if (res.status === 419) {
+            showError(trans('ui.error_session'));
+        } else {
+            showError(trans('ui.error_tag'));
         }
     } catch {
-        // silently ignore network errors
+        showError(trans('ui.error_network'));
     } finally {
         togglingTag.value = null;
     }
@@ -147,17 +160,21 @@ async function toggleSave() {
 
     try {
         if (isSaved.value) {
-            await fetch(
+            const res = await fetch(
                 `/saved-pois/${encodeURIComponent(props.poi.external_id)}`,
                 {
                     method: 'DELETE',
                     headers: { 'X-CSRF-TOKEN': getCsrf() },
                 },
             );
+            if (!res.ok) {
+                showError(res.status === 419 ? trans('ui.error_session') : trans('ui.error_save'));
+                return;
+            }
             isSaved.value = false;
             emit('unsaved', props.poi.external_id);
         } else {
-            await fetch('/saved-pois', {
+            const res = await fetch('/saved-pois', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -166,14 +183,20 @@ async function toggleSave() {
                 body: JSON.stringify({
                     poi_external_id: props.poi.external_id,
                     layer: props.poi.layer,
-                    name: props.poi.name,
+                    name: props.poi.name || '',
                     lat: props.poi.lat,
                     lng: props.poi.lng,
                 }),
             });
+            if (!res.ok) {
+                showError(res.status === 419 ? trans('ui.error_session') : trans('ui.error_save'));
+                return;
+            }
             isSaved.value = true;
             emit('saved', props.poi.external_id);
         }
+    } catch {
+        showError(trans('ui.error_network'));
     } finally {
         isSaving.value = false;
     }
@@ -224,6 +247,16 @@ function getCuisine(rawData: RawData): string {
         >
             <!-- Drag handle -->
             <div class="mx-auto mt-3 h-1 w-10 rounded-full bg-border" />
+
+            <!-- Error toast -->
+            <Transition name="fade">
+                <div
+                    v-if="errorMsg"
+                    class="mx-5 mt-3 rounded-xl bg-red-500/10 px-4 py-2 text-center text-xs font-medium text-red-600 dark:text-red-400"
+                >
+                    {{ errorMsg }}
+                </div>
+            </Transition>
 
             <!-- Header -->
             <div class="flex items-start gap-3 px-5 pt-4 pb-3">
@@ -479,5 +512,15 @@ function getCuisine(rawData: RawData): string {
 .slide-up-enter-from,
 .slide-up-leave-to {
     transform: translateY(100%);
+}
+
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
 }
 </style>

@@ -22,9 +22,15 @@ class SavedPoisController extends Controller
      */
     public function store(StoreSavedPoiRequest $request): JsonResponse
     {
-        $saved = $this->savedPois->store($request->user()->id, $request->validated());
+        try {
+            $saved = $this->savedPois->store($request->user()->id, $request->validated());
 
-        return response()->json($saved, $saved->wasRecentlyCreated ? 201 : 200);
+            return response()->json($saved, $saved->wasRecentlyCreated ? 201 : 200);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json(['message' => __('ui.error_save')], 500);
+        }
     }
 
     /**
@@ -32,9 +38,15 @@ class SavedPoisController extends Controller
      */
     public function updateNotes(UpdateSavedPoiNotesRequest $request, string $externalId): JsonResponse
     {
-        $this->savedPois->updateNotes($request->user()->id, $externalId, $request->validated('notes'));
+        try {
+            $this->savedPois->updateNotes($request->user()->id, $externalId, $request->validated('notes'));
 
-        return response()->json(['ok' => true]);
+            return response()->json(['ok' => true]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json(['message' => __('ui.error_save')], 500);
+        }
     }
 
     /**
@@ -42,8 +54,14 @@ class SavedPoisController extends Controller
      */
     public function destroy(Request $request, string $externalId): Response
     {
-        $this->savedPois->destroy($request->user()->id, $externalId);
+        try {
+            $this->savedPois->destroy($request->user()->id, $externalId);
 
-        return response()->noContent();
+            return response()->noContent();
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json(['message' => __('ui.error_save')], 500);
+        }
     }
 }

@@ -14,4 +14,9 @@ return [
     'search_places_placeholder' => 'Search by name or city...',
     'notes_placeholder' => 'Personal notes...',
     'layer_load_error' => 'Could not load places, try again.',
+    'error_save' => 'Could not save this place. Please try again.',
+    'error_tag' => 'Could not update the tag. Please try again.',
+    'error_session' => 'Session expired. Please refresh the page.',
+    'error_network' => 'Network error. Please check your connection.',
+    'error_page_load' => 'Could not load the page. Please try again.',
 ];

@@ -25,20 +25,26 @@ class PoiTagsController extends Controller
      */
     public function index(Request $request, string $externalId): JsonResponse
     {
-        $userId = $request->user()->id;
+        try {
+            $userId = $request->user()->id;
 
-        $counts = (new PoiTagCountsQuery([$externalId]))->handle()
-            ->get($externalId, collect())
-            ->pluck('total', 'tag');
+            $counts = (new PoiTagCountsQuery([$externalId]))->handle()
+                ->get($externalId, collect())
+                ->pluck('total', 'tag');
 
-        $userTags = (new PoiTagUserTagsQuery([$externalId], $userId))->handle()
-            ->get($externalId, collect())
-            ->pluck('tag');
+            $userTags = (new PoiTagUserTagsQuery([$externalId], $userId))->handle()
+                ->get($externalId, collect())
+                ->pluck('tag');
 
-        return response()->json([
-            'counts' => $counts,
-            'user_tags' => $userTags,
-        ]);
+            return response()->json([
+                'counts' => $counts,
+                'user_tags' => $userTags,
+            ]);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json(['counts' => [], 'user_tags' => [], 'message' => __('ui.error_tag')], 500);
+        }
     }
 
     /**
@@ -48,12 +54,18 @@ class PoiTagsController extends Controller
      */
     public function toggle(TogglePoiTagRequest $request, string $externalId): JsonResponse
     {
-        $result = $this->poiTagService->toggle(
-            externalId: $externalId,
-            userId: $request->user()->id,
-            tag: PoiTagEnum::from($request->validated('tag')),
-        );
+        try {
+            $result = $this->poiTagService->toggle(
+                externalId: $externalId,
+                userId: $request->user()->id,
+                tag: PoiTagEnum::from($request->validated('tag')),
+            );
 
-        return response()->json($result);
+            return response()->json($result);
+        } catch (\Throwable $e) {
+            report($e);
+
+            return response()->json(['message' => __('ui.error_tag')], 500);
+        }
     }
 }

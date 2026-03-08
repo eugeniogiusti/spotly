@@ -22,17 +22,21 @@ class NominatimService
      */
     public function search(string $query, int $limit = 8): ?Collection
     {
-        $response = Http::timeout(10)
-            ->withHeaders([
-                'User-Agent' => $this->userAgent(),
-                'Accept-Language' => 'en',
-            ])
-            ->get(self::BASE_URL.'/search', [
-                'q' => $query,
-                'format' => 'json',
-                'limit' => $limit,
-                'addressdetails' => 1,
-            ]);
+        try {
+            $response = Http::timeout(10)
+                ->withHeaders([
+                    'User-Agent' => $this->userAgent(),
+                    'Accept-Language' => 'en',
+                ])
+                ->get(self::BASE_URL.'/search', [
+                    'q' => $query,
+                    'format' => 'json',
+                    'limit' => $limit,
+                    'addressdetails' => 1,
+                ]);
+        } catch (\Exception) {
+            return null;
+        }
 
         if ($response->failed()) {
             return null;
@@ -59,14 +63,18 @@ class NominatimService
      */
     public function reverseGeocode(float $lat, float $lng): ?string
     {
-        $response = Http::timeout(10)
-            ->withHeaders(['User-Agent' => $this->userAgent()])
-            ->get(self::BASE_URL.'/reverse', [
-                'format' => 'json',
-                'lat' => $lat,
-                'lon' => $lng,
-                'zoom' => 10,
-            ]);
+        try {
+            $response = Http::timeout(10)
+                ->withHeaders(['User-Agent' => $this->userAgent()])
+                ->get(self::BASE_URL.'/reverse', [
+                    'format' => 'json',
+                    'lat' => $lat,
+                    'lon' => $lng,
+                    'zoom' => 10,
+                ]);
+        } catch (\Exception) {
+            return null;
+        }
 
         if ($response->failed()) {
             return null;
