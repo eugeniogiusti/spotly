@@ -1,4 +1,5 @@
-# Spotly
+![Logo](docs/screenshots/full_logo.png)
+
 
 > Explore a neighborhood like a local, not a tourist.
 
