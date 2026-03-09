@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { trans } from 'laravel-vue-i18n';
 import { LayoutGrid, Map, MapPin } from 'lucide-vue-next';
+import { computed } from 'vue';
 import AppLogo from '@/components/AppLogo.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
@@ -16,23 +18,23 @@ import {
 import { dashboard, map, myPlaces } from '@/routes';
 import type { NavItem } from '@/types';
 
-const mainNavItems: NavItem[] = [
+const mainNavItems = computed<NavItem[]>(() => [
     {
         title: 'Dashboard',
         href: dashboard(),
         icon: LayoutGrid,
     },
     {
-        title: 'Map',
+        title: trans('ui.map_title'),
         href: map(),
         icon: Map,
     },
     {
-        title: 'My Places',
+        title: trans('ui.my_places'),
         href: myPlaces(),
         icon: MapPin,
     },
-];
+]);
 </script>
 
 <template>

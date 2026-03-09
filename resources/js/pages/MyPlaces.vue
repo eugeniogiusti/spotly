@@ -74,7 +74,7 @@ const props = defineProps<{
 }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'My Places', href: myPlaces() },
+    { title: trans('ui.my_places_title'), href: myPlaces() },
 ];
 
 const expandedId = ref<number | null>(null);
@@ -227,7 +227,7 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
 </script>
 
 <template>
-    <Head title="My Places" />
+    <Head :title="trans('ui.my_places_title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="flex flex-col gap-4 p-6">
@@ -243,10 +243,10 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
                 </div>
                 <div>
                     <h2 class="text-xl font-semibold text-foreground">
-                        No saved places yet
+                        {{ trans('ui.my_places_empty_title') }}
                     </h2>
                     <p class="mt-1 text-sm text-muted-foreground">
-                        Open the map and tap ❤️ on any place to save it here.
+                        {{ trans('ui.my_places_empty_subtitle') }}
                     </p>
                 </div>
             </div>
@@ -254,7 +254,7 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
             <template v-else>
                 <!-- Header -->
                 <p class="text-sm text-muted-foreground">
-                    {{ totalCount }} places saved
+                    {{ trans('ui.places_saved', { count: totalCount }) }}
                 </p>
 
                 <!-- Search bar -->
@@ -286,13 +286,13 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
                     class="w-full rounded-2xl border border-border bg-card px-4 py-2.5 text-sm text-foreground focus:ring-1 focus:ring-primary focus:outline-none"
                     @change="filterByLayer(($event.target as HTMLSelectElement).value || null)"
                 >
-                    <option value="">All layers</option>
+                    <option value="">{{ trans('ui.all_layers') }}</option>
                     <option
                         v-for="layer in Object.values(layers ?? {})"
                         :key="layer.key"
                         :value="layer.key"
                     >
-                        {{ layer.icon }} {{ layer.label }}
+                        {{ layer.icon }} {{ trans('layers.' + layer.key) }}
                     </option>
                 </select>
 
@@ -307,7 +307,7 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
                         "
                         @click="filterByCity(null)"
                     >
-                        All ({{ totalCount }})
+                        {{ trans('ui.all_count', { count: totalCount }) }}
                     </button>
                     <button
                         v-for="city in cities"
@@ -388,7 +388,7 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
                                         class="shrink-0 rounded-lg px-2.5 py-1 text-xs font-medium text-primary opacity-0 transition-all group-hover:opacity-100 hover:bg-primary/10"
                                         @click.stop="openOnMap(poi)"
                                     >
-                                        View on map
+                                        {{ trans('ui.view_on_map') }}
                                     </button>
 
                                     <!-- Remove -->
@@ -597,7 +597,7 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
                                                             poi.id
                                                         "
                                                         class="text-xs text-green-600 dark:text-green-400"
-                                                        >✓ Saved</span
+                                                        >{{ trans('ui.notes_saved') }}</span
                                                     >
                                                 </Transition>
                                                 <button
@@ -614,8 +614,8 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
                                                 >
                                                     {{
                                                         savingNotes === poi.id
-                                                            ? 'Saving...'
-                                                            : 'Save note'
+                                                            ? trans('ui.saving')
+                                                            : trans('ui.save_note')
                                                     }}
                                                 </button>
                                             </div>
@@ -626,14 +626,14 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
                                                 class="flex items-center gap-1.5 rounded-lg bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
                                                 @click="openOnMap(poi)"
                                             >
-                                                View on map
+                                                {{ trans('ui.view_on_map') }}
                                             </button>
                                             <a
                                                 v-if="poi.details.phone"
                                                 :href="`tel:${poi.details.phone}`"
                                                 class="flex items-center gap-1.5 rounded-lg bg-muted px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted/70"
                                             >
-                                                Call
+                                                {{ trans('ui.call') }}
                                             </a>
                                             <a
                                                 v-if="poi.details.website"
@@ -642,7 +642,7 @@ async function toggleTag(poi: SavedPoi, tag: string): Promise<void> {
                                                 rel="noopener noreferrer"
                                                 class="flex items-center gap-1.5 rounded-lg bg-muted px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted/70"
                                             >
-                                                Website
+                                                {{ trans('ui.website') }}
                                             </a>
                                             <a
                                                 :href="directionsUrlGoogle(poi)"

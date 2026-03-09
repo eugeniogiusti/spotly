@@ -18,6 +18,7 @@ Spotly is a map app for slow travelers. Instead of showing you the usual generic
 - **Community tags** on POIs: users can add collaborative tags (`laptop_friendly`, `wifi`, `power_outlets`, `quiet`, `budget_friendly`, `tourist_trap`)
 - **My Places**: paginated and filterable list of saved places
 - **Dashboard** with personal stats: saved places, cities explored, favorite layer
+- **Multilingual UI**: English, Italian, Spanish, French, German, Portuguese — switchable per user from profile settings
 
 ---
 

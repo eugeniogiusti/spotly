@@ -63,7 +63,7 @@ function onPoiUnsaved(externalId: string): void {
     }
 }
 
-const breadcrumbs: BreadcrumbItem[] = [{ title: 'Map', href: mapRoute() }];
+const breadcrumbs: BreadcrumbItem[] = [{ title: trans('ui.map_title'), href: mapRoute() }];
 
 const page = usePage();
 const isLoggedIn = !!page.props.auth?.user;
@@ -405,7 +405,7 @@ function locateMe(): void {
 </script>
 
 <template>
-    <Head title="Map" />
+    <Head :title="trans('ui.map_title')" />
 
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="relative min-h-0 flex-1 overflow-hidden">

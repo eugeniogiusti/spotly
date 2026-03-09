@@ -1,13 +1,15 @@
 <?php
 
 return [
-    'food'      => 'Food',
-    'markets'   => 'Markets',
-    'parks'     => 'Parks',
-    'transport' => 'Transport',
-    'work'      => 'Work',
-    'health'    => 'Health',
-    'fitness'   => 'Fitness',
-    'services'  => 'Services',
-    'education' => 'Education',
+    'food'        => 'Food',
+    'coffee'      => 'Coffee',
+    'supermarket' => 'Supermarket',
+    'parks'       => 'Parks',
+    'transit'     => 'Transit',
+    'coworking'   => 'Coworking',
+    'pharmacy'    => 'Pharmacy',
+    'laundry'     => 'Laundry',
+    'atm'         => 'ATM',
+    'gym'         => 'Gym',
+    'wellness'    => 'Wellness',
 ];

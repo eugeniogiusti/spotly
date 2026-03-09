@@ -1,6 +1,6 @@
-import { createInertiaApp } from '@inertiajs/vue3';
+import { createInertiaApp, router } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
-import { i18nVue } from 'laravel-vue-i18n';
+import { i18nVue, loadLanguageAsync } from 'laravel-vue-i18n';
 import type { DefineComponent } from 'vue';
 import { createApp, h } from 'vue';
 import '../css/app.css';
@@ -16,10 +16,11 @@ createInertiaApp({
             import.meta.glob<DefineComponent>('./pages/**/*.vue'),
         ),
     setup({ el, App, props, plugin }) {
+        const locale = (props.initialPage.props as { locale?: string }).locale ?? 'en';
         createApp({ render: () => h(App, props) })
             .use(plugin)
             .use(i18nVue, {
-                // Vite plugin handles PHP→JSON conversion at build time
+                lang: locale,
                 resolve: (lang: string) =>
                     import(`../../lang/php_${lang}.json`),
             })
@@ -28,6 +29,14 @@ createInertiaApp({
     progress: {
         color: '#4B5563',
     },
+});
+
+// Switch i18n language on every Inertia navigation when locale changes
+router.on('navigate', (event) => {
+    const locale = (event.detail.page.props as { locale?: string }).locale;
+    if (locale) {
+        loadLanguageAsync(locale);
+    }
 });
 
 // This will set light / dark mode on page load...

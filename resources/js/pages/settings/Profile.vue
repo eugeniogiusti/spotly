@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Form, Head, Link, usePage } from '@inertiajs/vue3';
+import { Form, Head, Link, router, usePage } from '@inertiajs/vue3';
 import { computed } from 'vue';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import DeleteUser from '@/components/DeleteUser.vue';
@@ -8,6 +8,7 @@ import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import AppLayout from '@/layouts/AppLayout.vue';
 import SettingsLayout from '@/layouts/settings/Layout.vue';
 import { edit } from '@/routes/profile';
@@ -30,6 +31,13 @@ const breadcrumbItems: BreadcrumbItem[] = [
 
 const page = usePage();
 const user = computed(() => page.props.auth.user);
+const locale = computed(() => (page.props as { locale: string }).locale);
+
+function changeLocale(value: string): void {
+    router.patch('/settings/locale', { locale: value }, {
+        onSuccess: () => window.location.reload(),
+    });
+}
 </script>
 
 <template>
@@ -123,6 +131,32 @@ const user = computed(() => page.props.auth.user);
                         </Transition>
                     </div>
                 </Form>
+            </div>
+
+            <!-- Language -->
+            <div class="flex flex-col space-y-6">
+                <Heading
+                    variant="small"
+                    title="Language"
+                    description="Choose the interface language"
+                />
+
+                <div class="grid gap-2">
+                    <Label for="locale">Language</Label>
+                    <Select :default-value="locale" @update:model-value="changeLocale">
+                        <SelectTrigger id="locale" class="w-48">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="en">English</SelectItem>
+                            <SelectItem value="it">Italiano</SelectItem>
+                            <SelectItem value="es">Español</SelectItem>
+                            <SelectItem value="fr">Français</SelectItem>
+                            <SelectItem value="de">Deutsch</SelectItem>
+                            <SelectItem value="pt">Português</SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
 
             <DeleteUser />
