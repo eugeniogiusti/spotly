@@ -9,6 +9,8 @@ Spotly is a map app for slow travelers. Instead of showing you the usual generic
 
 [![Watch the demo on YouTube](https://img.youtube.com/vi/v2J6zNtTwRs/maxresdefault.jpg)](https://www.youtube.com/watch?v=v2J6zNtTwRs)
 
+[Watch the demo on YouTube](https://www.youtube.com/watch?v=v2J6zNtTwRs)
+
 ---
 
 ## Features
